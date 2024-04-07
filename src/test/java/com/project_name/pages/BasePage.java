@@ -1,11 +1,9 @@
 package com.project_name.pages;
-
-
-
-
 import com.project_name.utilities.BrowserUtils;
 import com.project_name.utilities.Driver;
+import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.CacheLookup;
@@ -15,12 +13,21 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BasePage {
+public abstract class   BasePage {
 
-    @FindBy(css = "span.title-level-1")
-    public List<WebElement> menuOptions;
+
+    @FindBy(xpath = "//a[@id='itemc']")
+    public List<WebElement> categories;
+    
+    @FindBy(xpath = "//h4[@class='card-title']/a")
+    public List<WebElement> listOfItems;
+
+    @FindBy(xpath = "//div[@id='navbarExample']//a")
+    private List<WebElement> menuBar;
+
 
     @FindBy(css = "div[class='loader-mask shown']")
     @CacheLookup
@@ -43,6 +50,63 @@ public abstract class BasePage {
     }
 
 
+    public static void verifyTitleName(String expectedTitle){
+        String actualTitle = Driver.getDriver().getTitle();
+        Assert.assertEquals(expectedTitle, actualTitle);
+    }
+
+    public void navigateToCategory(String categoryName){
+        for (WebElement eachCategory : categories) {
+
+            if (eachCategory.getText().equals(categoryName)){
+                System.out.println("Click on " + eachCategory.getText());
+                eachCategory.click();
+            }
+        }
+    }
+    public List<String> getListOfItems(){
+        List<String> items = new ArrayList<>();
+        for (WebElement eachItem : listOfItems) {
+            items.add(eachItem.getText());
+        }
+        return items;
+    }
+    public void verifyListOfItems(List<String> expectedListOfItems){
+
+            Assert.assertEquals(expectedListOfItems, getListOfItems());
+
+    }
+
+    public WebElement getWebElementFromList(List<WebElement> list, String nameOfItem){
+        for (WebElement each : list) {
+            System.out.println(each.getText());
+            if (each.getText().equals(nameOfItem)){
+                return each;
+            }
+        }
+        return null;
+    }
+    public void navigateToItem(String itemName){
+        for (WebElement eachItem : listOfItems) {
+            if (eachItem.getText().equals(itemName)){
+                eachItem.click();
+            }
+        }
+    }
+
+    /**
+    Navigation through the Menue on the top of the page
+     */
+
+    public WebElement navigationToModuleOfMenuBar(String moduleName){
+        for (WebElement eachModule : menuBar) {
+            System.out.println(eachModule.getText());
+            if (eachModule.getText().contains(moduleName)){
+                return eachModule;
+            }
+        }
+        return null;
+    }
     /**
      * @return page name, for example: Dashboard
      */
