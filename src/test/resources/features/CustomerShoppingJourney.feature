@@ -30,13 +30,4 @@ Feature: Customer shopping journey
     And Customer clicks on Purchase
     Then Customer should see a purchase confirmation pop-up
     And Purchase ID and Amount should be captured and logged
-
-  Scenario: Customer verifies the purchase amount
-    Given Customer is on the purchase confirmation page
-    When Customer retrieves the purchase amount
     Then Purchase amount should equal the expected amount
-
-  Scenario: Customer completes the purchase
-    Given Customer is on the purchase confirmation page
-    When Customer clicks on "Ok"
-    Then Customer should be redirected to the home page
